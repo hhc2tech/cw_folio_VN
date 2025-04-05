@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 from cw_portfolio import compute_metrics
+from fpdf import FPDF
+import tempfile
 
 st.title("Top Covered Warrants Portfolio Analysis")
 
@@ -38,33 +39,11 @@ for i in range(len(top_stocks)):
     except:
         continue
 
-# Fix: Ensure Sharpe_Ratio & Ticker exist
-if "Sharpe_Ratio" not in summary_df.columns:
-    summary_df["Sharpe_Ratio"] = summary_df["Avg_Return"] / summary_df["Volatility"].replace(0, 1)
-if "Ticker" not in summary_df.columns and "ticker" in summary_df.columns:
-    summary_df["Ticker"] = summary_df["ticker"]
-
-# Sharpe Ratio
-if st.button("📈 Analyze Sharpe Ratio"):
-    st.subheader("Sharpe Ratio by Ticker")
-    filtered_df = summary_df[['Sharpe_Ratio', 'Ticker']].dropna()
-    if not filtered_df.empty:
-        fig, ax = plt.subplots()
-        sns.barplot(data=filtered_df, x='Sharpe_Ratio', y='Ticker', palette='coolwarm', ax=ax)
-        ax.set_title("Sharpe Ratio by Ticker")
-        st.pyplot(fig)
-        if st.checkbox("📥 Export Sharpe Ratio Table"):
-            csv_data = filtered_df.to_csv(index=False).encode('utf-8')
-            st.download_button("Download CSV", csv_data, "sharpe_ratios.csv", "text/csv")
-    else:
-        st.warning("⚠️ No valid Sharpe Ratio data to display.")
-
-# PDF generation
+# PDF Report Export using temp file
 if st.checkbox("📝 Generate PDF Report"):
-    try:
-        from fpdf import FPDF
-        pdf_filename = st.text_input("Enter PDF filename (no extension)", value="cw_portfolio_report")
-        if st.button("📄 Create PDF Report"):
+    pdf_filename = st.text_input("Enter PDF filename (no extension)", value="cw_portfolio_report")
+    if st.button("📄 Create PDF Report"):
+        try:
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
@@ -82,10 +61,10 @@ if st.checkbox("📝 Generate PDF Report"):
                     )
                 except:
                     continue
-            os.makedirs("/mnt/data", exist_ok=True)
-            final_path = f"/mnt/data/{pdf_filename}.pdf"
-            pdf.output(final_path)
-            with open(final_path, "rb") as f:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmpfile:
+                pdf.output(tmpfile.name)
+                tmpfile_path = tmpfile.name
+            with open(tmpfile_path, "rb") as f:
                 st.download_button("📥 Download PDF", data=f, file_name=f"{pdf_filename}.pdf", mime="application/pdf")
-    except ImportError:
-        st.warning("⚠️ FPDF not installed. Run `pip install fpdf` to enable PDF export.")
+        except Exception as e:
+            st.error(f"PDF generation failed: {e}")
