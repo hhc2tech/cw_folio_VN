@@ -66,3 +66,34 @@ Giá lý thuyết CW = (C · R) / (Tỷ lệ chuyển đổi)
 Trong đó:  
 - C là giá quyền theo mô hình Black-Scholes  
 - R là hệ số điều chỉnh hoặc chiết khấu từ tổ chức phát hành
+-----------------------------
+PHẦN 2
+
+📊 1. Ý nghĩa các chỉ số
+
+Chỉ số	Giải thích
+Return	Tỷ suất sinh lời cổ phiếu trong 5 phiên gần nhất
+Risk	Độ biến động giá (Standard Deviation – càng cao, càng biến động mạnh)
+Score	Điểm tổng hợp (kết hợp Return, CW change, Stability), dùng để xếp hạng
+
+🔍 2. Phân tích điểm nổi bật
+
+Mã	Return	Risk	Nhận xét
+VI	+8.86%	0.98	Return cao nhất 🔥 nhưng Risk cũng cao nhất. Rủi ro lớn.
+BI, SAB	-4.7%, -2.5%	0.08 - 0.12	Dù âm nhẹ nhưng ổn định, Risk thấp ✅
+VC, GAS	-6.3%, -7.5%	0.48 - 0.65	Risk cao → biến động mạnh, nhiều rủi ro
+HP	-10.6%	0.08	Lỗ nặng nhưng ổn định bất ngờ. Có thể do mất niềm tin từ thị trường
+
+⚠️ 3. Ý nghĩa Risk
+
+Risk thấp (0.05 – 0.2): Cổ phiếu ổn định, phù hợp đầu tư CW an toàn hoặc bán quyền
+Risk trung bình (0.2 – 0.5): Cân nhắc tùy khẩu vị rủi ro
+Risk cao (0.5 – 1.0): Biến động lớn, thích hợp cho CW ngắn hạn hoặc lướt sóng
+
+✅ 4. Nên đầu tư CW cổ phiếu nào?
+
+Nên cân nhắc đầu tư	Vì sao?
+SA	Return gần 0, rủi ro thấp, phù hợp nếu CW có giá rẻ hoặc tỷ lệ đòn bẩy tốt
+BI	Ổn định nhất, score cao, tốt cho chiến lược phòng thủ
+VI	Lợi nhuận cao, nhưng cần stop-loss rõ ràng vì Risk rất lớn
+VN	Trung tính, phù hợp đầu tư ngắn hạn nếu CW đang chiết khấu
